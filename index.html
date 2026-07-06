@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<title>PetLog — ჩემი ძაღლი</title>
+<meta name="description" content="ძაღლის ჯანმრთელობის, რუტინისა და მოგონებების პირადი დღიური">
+<meta name="theme-color" content="#0B0C0F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PetLog">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="app-logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ ONBOARDING VIEW ============ -->
+<main id="onboarding-view" class="view onboarding-view">
+  <figure class="logo-figure">
+    <img src="app-logo.png" class="app-logo" alt="App Logo">
+  </figure>
+
+  <section class="onboarding-intro">
+    <h1>PetLog-ში მოგესალმებით</h1>
+    <p>დაამატეთ თქვენი ძაღლი და დაიწყეთ მისი ჯანმრთელობის, რუტინისა და მოგონებების აღრიცხვა — ყველაფერი ერთ ადგილას, სამუდამოდ შენახული თქვენს მოწყობილობაზე.</p>
+  </section>
+
+  <form id="onboarding-form" class="onboarding-form" autocomplete="off">
+    <fieldset class="field-group">
+      <legend class="visually-hidden">ძაღლის მონაცემები</legend>
+
+      <label class="field">
+        <span class="field-label">სახელი</span>
+        <input type="text" id="dog-name" name="dog-name" placeholder="მაგ. ჩარლი" required maxlength="40">
+      </label>
+
+      <label class="field">
+        <span class="field-label">ასაკი (წლები)</span>
+        <input type="number" id="dog-age" name="dog-age" placeholder="მაგ. 3" min="0" max="30" step="0.1" required>
+      </label>
+
+      <label class="field">
+        <span class="field-label">ჯიში</span>
+        <input type="text" id="dog-breed" name="dog-breed" placeholder="მაგ. კავალერ კინგ ჩარლზ სპანიელი" required maxlength="60">
+      </label>
+
+      <label class="field">
+        <span class="field-label">სქესი</span>
+        <select id="dog-gender" name="dog-gender" required>
+          <option value="" disabled selected>აირჩიეთ</option>
+          <option value="male">მამრი</option>
+          <option value="female">მდედრი</option>
+        </select>
+      </label>
+
+      <label class="field field-photo">
+        <span class="field-label">პროფილის ფოტო (არასავალდებულო)</span>
+        <input type="file" id="dog-photo-input" name="dog-photo" accept="image/*">
+        <span class="field-hint">აირჩიეთ ფოტო გალერეიდან</span>
+      </label>
+    </fieldset>
+
+    <button type="submit" class="btn-primary">რეგისტრაციის დასრულება</button>
+  </form>
+</main>
+
+<!-- ============ MAIN APP VIEW ============ -->
+<div id="app-view" class="view app-view is-hidden">
+
+  <header class="app-header">
+    <figure class="header-avatar" id="header-avatar-figure">
+      <img id="header-avatar-img" src="" alt="ძაღლის ფოტო" class="header-avatar-img is-hidden">
+      <span id="header-avatar-fallback" class="header-avatar-fallback">🐾</span>
+    </figure>
+    <hgroup class="header-text">
+      <h1 id="header-dog-name">—</h1>
+      <p id="header-dog-sub">—</p>
+    </hgroup>
+  </header>
+
+  <!-- ---- DASHBOARD ---- -->
+  <section id="tab-dashboard" class="tab-panel">
+    <article class="profile-card">
+      <figure class="profile-photo-wrap">
+        <img id="profile-photo" src="" alt="ძაღლის პროფილის ფოტო" class="is-hidden">
+        <span id="profile-photo-fallback" class="profile-photo-fallback">🐶</span>
+      </figure>
+      <dl class="profile-stats">
+        <div class="stat">
+          <dt>ასაკი</dt>
+          <dd id="stat-age">—</dd>
+        </div>
+        <div class="stat">
+          <dt>ჯიში</dt>
+          <dd id="stat-breed">—</dd>
+        </div>
+        <div class="stat">
+          <dt>სქესი</dt>
+          <dd id="stat-gender">—</dd>
+        </div>
+      </dl>
+    </article>
+
+    <section class="section-block">
+      <h2 class="section-title">დღევანდელი რუტინა</h2>
+      <form id="routine-form" class="routine-form">
+        <fieldset class="routine-fieldset">
+          <legend class="visually-hidden">რუტინის ტიპი</legend>
+          <label class="radio-pill">
+            <input type="radio" name="routine-type" value="feeding" checked>
+            <span>🍖 კვება</span>
+          </label>
+          <label class="radio-pill">
+            <input type="radio" name="routine-type" value="walk">
+            <span>🐾 გასეირნება</span>
+          </label>
+        </fieldset>
+        <label class="field">
+          <span class="field-label">შენიშვნა</span>
+          <input type="text" id="routine-note" placeholder="მაგ. საუზმე, 200გრ" maxlength="80">
+        </label>
+        <button type="submit" class="btn-secondary">დამატება</button>
+      </form>
+
+      <ul id="routine-list" class="entry-list"></ul>
+      <p id="routine-empty" class="empty-state">დღეს ჯერ არაფერია დამატებული. დაამატეთ პირველი ჩანაწერი ზემოთ.</p>
+    </section>
+  </section>
+
+  <!-- ---- HEALTH ---- -->
+  <section id="tab-health" class="tab-panel is-hidden">
+    <section class="section-block">
+      <h2 class="section-title">ჯანმრთელობის ჩანაწერი</h2>
+      <form id="health-form" class="health-form">
+        <label class="field">
+          <span class="field-label">ტიპი</span>
+          <select id="health-type" required>
+            <option value="analysis">ანალიზი</option>
+            <option value="vaccination">აცრა</option>
+            <option value="document">დოკუმენტი</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="field-label">სათაური</span>
+          <input type="text" id="health-title" placeholder="მაგ. სისხლის საერთო ანალიზი" required maxlength="80">
+        </label>
+        <label class="field">
+          <span class="field-label">თარიღი</span>
+          <input type="date" id="health-date" required>
+        </label>
+        <label class="field">
+          <span class="field-label">შენიშვნა</span>
+          <input type="text" id="health-note" placeholder="დამატებითი დეტალები" maxlength="120">
+        </label>
+        <label class="field field-photo">
+          <span class="field-label">დოკუმენტის/ანალიზის ფოტო</span>
+          <input type="file" id="health-file-input" accept="image/*">
+          <span class="field-hint">აირჩიეთ ან გადაიღეთ</span>
+        </label>
+        <button type="submit" class="btn-secondary">შენახვა</button>
+      </form>
+
+      <ul id="health-list" class="entry-list health-list"></ul>
+      <p id="health-empty" class="empty-state">ჯანმრთელობის ჩანაწერები ჯერ არ არის დამატებული.</p>
+    </section>
+  </section>
+
+  <!-- ---- MEMORIES ---- -->
+  <section id="tab-memories" class="tab-panel is-hidden">
+    <section class="section-block">
+      <h2 class="section-title">მოგონებები</h2>
+      <form id="memory-form" class="memory-form">
+        <label class="field field-photo field-capture">
+          <span class="field-label">გადაიღეთ ან აირჩიეთ ფოტო</span>
+          <input type="file" id="memory-photo-input" accept="image/*" capture="environment" required>
+          <span class="field-hint">📷 კამერა ან გალერეა</span>
+        </label>
+        <label class="field">
+          <span class="field-label">წარწერა</span>
+          <input type="text" id="memory-caption" placeholder="მაგ. პირველი გასეირნება პარკში" maxlength="100">
+        </label>
+        <button type="submit" class="btn-secondary">გალერეაში დამატება</button>
+      </form>
+
+      <div id="memories-grid" class="memories-grid"></div>
+      <p id="memories-empty" class="empty-state">გალერეა ცარიელია. დაამატეთ პირველი მოგონება ზემოთ.</p>
+    </section>
+  </section>
+
+  <!-- ---- SETTINGS ---- -->
+  <section id="tab-settings" class="tab-panel is-hidden">
+    <section class="section-block">
+      <h2 class="section-title">პარამეტრები</h2>
+
+      <details class="settings-card" open>
+        <summary>მონაცემების სარეზერვო ასლი</summary>
+        <p class="settings-desc">ჩამოტვირთეთ თქვენი ძაღლის მთელი ისტორია — პროფილი, რუტინა, ჯანმრთელობის ჩანაწერები და მოგონებები — ერთ ფაილში.</p>
+        <button type="button" id="export-btn" class="btn-primary">მონაცემების ექსპორტი</button>
+      </details>
+
+      <details class="settings-card">
+        <summary>პროფილის რედაქტირება</summary>
+        <p class="settings-desc">შეცვალეთ ძაღლის ძირითადი მონაცემები.</p>
+        <form id="edit-profile-form" class="onboarding-form">
+          <label class="field">
+            <span class="field-label">სახელი</span>
+            <input type="text" id="edit-dog-name" maxlength="40" required>
+          </label>
+          <label class="field">
+            <span class="field-label">ასაკი (წლები)</span>
+            <input type="number" id="edit-dog-age" min="0" max="30" step="0.1" required>
+          </label>
+          <label class="field">
+            <span class="field-label">ჯიში</span>
+            <input type="text" id="edit-dog-breed" maxlength="60" required>
+          </label>
+          <label class="field">
+            <span class="field-label">სქესი</span>
+            <select id="edit-dog-gender" required>
+              <option value="male">მამრი</option>
+              <option value="female">მდედრი</option>
+            </select>
+          </label>
+          <button type="submit" class="btn-secondary">ცვლილებების შენახვა</button>
+        </form>
+      </details>
+
+      <details class="settings-card settings-card-danger">
+        <summary>საშიში ზონა</summary>
+        <p class="settings-desc">ეს მოქმედება სამუდამოდ წაშლის ყველა შენახულ მონაცემს ამ მოწყობილობიდან.</p>
+        <button type="button" id="reset-btn" class="btn-danger">ყველა მონაცემის წაშლა</button>
+      </details>
+    </section>
+  </section>
+
+  <nav class="bottom-nav" aria-label="მთავარი ნავიგაცია">
+    <span class="nav-indicator" id="nav-indicator" aria-hidden="true"></span>
+    <button type="button" class="nav-btn is-active" data-tab="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" class="nav-icon"><path d="M12 3.5c-1 2-2.5 3-4 3-1.8 0-3 1.4-3 3.1 0 1.8 1.4 3.2 3 3.2.9 0 1.7-.4 2.3-1M12 3.5c1 2 2.5 3 4 3 1.8 0 3 1.4 3 3.1 0 1.8-1.4 3.2-3 3.2-.9 0-1.7-.4-2.3-1M8 15.5c0-1.8 1.8-3.2 4-3.2s4 1.4 4 3.2c0 2.5-1.8 5-4 5s-4-2.5-4-5Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="nav-label">მთავარი</span>
+    </button>
+    <button type="button" class="nav-btn" data-tab="health">
+      <svg viewBox="0 0 24 24" fill="none" class="nav-icon"><path d="M4 12.5h3.2l1.6-4 2.4 8 1.6-5.5 1.2 2.5H20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 20.2s-7-4.2-7-9.6a4.2 4.2 0 0 1 7-3.2 4.2 4.2 0 0 1 7 3.2c0 5.4-7 9.6-7 9.6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <span class="nav-label">ჯანმრთელობა</span>
+    </button>
+    <button type="button" class="nav-btn" data-tab="memories">
+      <svg viewBox="0 0 24 24" fill="none" class="nav-icon"><rect x="3.5" y="6.5" width="17" height="13" rx="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M8 6.5 9.6 4h4.8L16 6.5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.1" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span class="nav-label">მოგონებები</span>
+    </button>
+    <button type="button" class="nav-btn" data-tab="settings">
+      <svg viewBox="0 0 24 24" fill="none" class="nav-icon"><circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.8v2.1M12 18.1v2.1M20.2 12h-2.1M5.9 12H3.8M17.5 6.5l-1.5 1.5M8 16l-1.5 1.5M17.5 17.5 16 16M8 8 6.5 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span class="nav-label">პარამეტრები</span>
+    </button>
+  </nav>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
